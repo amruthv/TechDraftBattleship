@@ -21,7 +21,7 @@ targetStack = []
 board = np.zeros([boardSize,boardSize], dtype ='int')
 def playGame():
     while len(remainingTypes) != 0:
-        print board
+        print 'mode:', mode
         if mode == 'Random':
             # print 'doing random'
             probabilityDist = computeProbabilityDistribution()
@@ -97,17 +97,18 @@ def hitRowCol(row, col):
     r = requests.get(boardURL+'/'+ str(boardCol) + str(boardRow))
     result = json.loads(r.text or r.content)
     print result
-    if result['is_hit'] == True:
+    if result['is_hit']:
         board[row,col] = 2
         if result['sunk'] != None:
+            print result['sunk']
             # we sunk the ship
             remainingTypes.remove(shipNameToType[result['sunk']])
             targetStack = []
             mode = 'Random'
         else:
             # now we target this ship
+            print 'WTFWTFWTWFWTF'
             addNeighborsToStack(row,col)
-            targetStack = []
             mode = 'Target'
     else:
         print 'no hit'
